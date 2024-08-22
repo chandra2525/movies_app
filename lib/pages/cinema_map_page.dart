@@ -33,31 +33,35 @@ class _CinemaMapPageState extends State<CinemaMapPage> {
   }
 
   Future<void> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+    LocationPermission permission = await Geolocator.requestPermission();
+    Position userLocation = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
 
-    // Periksa apakah layanan lokasi aktif
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Layanan lokasi tidak aktif, beri tahu pengguna untuk mengaktifkan
-      return Future.error('Location services are disabled.');
-    }
+    // bool serviceEnabled;
+    // LocationPermission permission;
 
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      // Minta izin lokasi jika belum diberikan
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Izin lokasi ditolak, kembalikan error
-        return Future.error('Location permissions are denied');
-      }
-    }
+    // // Periksa apakah layanan lokasi aktif
+    // serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    // if (!serviceEnabled) {
+    //   // Layanan lokasi tidak aktif, beri tahu pengguna untuk mengaktifkan
+    //   return Future.error('Location services are disabled.');
+    // }
 
-    if (permission == LocationPermission.deniedForever) {
-      // Pengguna telah menolak izin lokasi secara permanen
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
+    // permission = await Geolocator.checkPermission();
+    // if (permission == LocationPermission.denied) {
+    //   // Minta izin lokasi jika belum diberikan
+    //   permission = await Geolocator.requestPermission();
+    //   if (permission == LocationPermission.denied) {
+    //     // Izin lokasi ditolak, kembalikan error
+    //     return Future.error('Location permissions are denied');
+    //   }
+    // }
+
+    // if (permission == LocationPermission.deniedForever) {
+    //   // Pengguna telah menolak izin lokasi secara permanen
+    //   return Future.error(
+    //       'Location permissions are permanently denied, we cannot request permissions.');
+    // }
 
     // Ambil posisi pengguna jika izin diberikan
     currentPosition = await Geolocator.getCurrentPosition();
